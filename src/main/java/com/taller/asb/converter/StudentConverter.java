@@ -16,7 +16,7 @@ import com.taller.asb.controller.UserController;
 import com.taller.asb.dto.ParameterDto;
 import com.taller.asb.dto.student.CreateStudentDto;
 import com.taller.asb.dto.student.StudentDto;
-import com.taller.asb.dto.user.UpdateUserDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.hateoas.LinkCreator;
 import com.taller.asb.model.Student;
 
@@ -79,7 +79,7 @@ public class StudentConverter {
 		return null;
 	}
 	
-	public Student toStudentModel(UpdateUserDto updateStudentDto) {
+	public Student toStudentModel(UpdateUserFormDto updateStudentDto) {
 		
 		if (updateStudentDto == null) return null;
 		

@@ -6,22 +6,22 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.taller.asb.annotations.UniqueValue;
-import com.taller.asb.manager.UserManager;
+import com.taller.asb.annotations.UniqueDocument;
+import com.taller.asb.annotations.UniqueUsername;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateUserDto {
+@UniqueUsername
+@UniqueDocument
+public class UpdateUserFormDto {
 	
 	@NotNull(message = "Id user not null")
 	private Integer idUser;
 	
-	@UniqueValue(column = "User_Username", manager = UserManager.class, message="Username exists")
 	@JsonProperty(required = true)
 	@NotNull(message = "Username not null")
 	@NotEmpty(message = "Username not empty")
@@ -55,12 +55,12 @@ public class UpdateUserDto {
 	@NotNull(message = "Id document type not null")
 	private Integer idDocumentType;
 	
-	@UniqueValue(column = "User_Document", manager = UserManager.class, message="Document exists")
 	@JsonProperty(required = true)
 	@NotNull(message = "Document not null")
 	@NotEmpty(message = "Document not empty")
 	@NotBlank(message = "Document not blank")
 	@Size(max = 20, message = "Document max 20 caracteres")
+	
 	private String document;
 	
 	@Size(max = 100, message = "Address max 100 caracteres")

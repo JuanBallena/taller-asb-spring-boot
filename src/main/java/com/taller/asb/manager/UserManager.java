@@ -8,18 +8,20 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.taller.asb.converter.UserConverter;
-import com.taller.asb.dto.user.CreateUserDto;
-import com.taller.asb.dto.user.UpdateUserDto;
+import com.taller.asb.dto.user.CreateUserFormDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
 import com.taller.asb.model.User;
 import com.taller.asb.repository.UserRepository;
 import com.taller.asb.response.ResponsePage;
 
 @Service
-public class UserManager implements UniqueValueManager {
+public class UserManager implements Uniqueable {
 	
-	private static final String COLUMN_USERNAME = "User_Username";
-	private static final String COLUMN_DOCUMENT = "User_Document";
+	private static final String FIELD_USERNAME = "User_Username";
+	private static final String FIELD_DOCUMENT = "User_Document";
+	private static final Boolean VALUE_EXISTS = false;
+	private static final Boolean VALUE_NOT_EXISTS = true;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -76,33 +78,54 @@ public class UserManager implements UniqueValueManager {
 		return userConverter.toUserDto(userRepository.findByIdUser(idUser));
 	}
 	
-	public UserDto saveUser(CreateUserDto createUserDto) {
+	public UserDto saveUser(CreateUserFormDto createUserFormDto) {
 		
-		User user = userRepository.save(userConverter.toUserModelForCreate(createUserDto));
+		User user = userRepository.save(userConverter.toUserModel(createUserFormDto));
 		userRepository.refresh(user);
 		return userConverter.toUserDto(user);
 	}
 	
-	public UserDto updateUser(UpdateUserDto updateUserDto) {
+	public UserDto updateUser(UpdateUserFormDto updateUserFormDto) {
 		
-		User user = userRepository.save(userConverter.toUserModelForUpdate(updateUserDto));
+		User user = userRepository.save(userConverter.toUserModel(updateUserFormDto));
 		userRepository.refresh(user);
 		return userConverter.toUserDto(user);
 	}
 
 	@Override
-	public boolean valueExistsInDatabase(String column, Object value) {
+	public boolean valueExists(String field, Object value) {
+		
 		User user = new User();
 		
-		switch (column) {
-			case COLUMN_USERNAME:
+		switch (field) {
+			case FIELD_USERNAME:
 				user = userRepository.findByUsername(value.toString().toUpperCase());
-				return user == null;
-			case COLUMN_DOCUMENT:
+				
+			case FIELD_DOCUMENT:
 				user = userRepository.findByDocument(value.toString());
-				return user == null;	
-			default:
-				return false;
 		}
+		
+		return user == null ? VALUE_NOT_EXISTS : VALUE_EXISTS;
 	}
+
+	public boolean usernameExists(UpdateUserFormDto updateUserDto) {
+		
+		User user = userRepository.findByUsername(updateUserDto.getUsername().toString().toUpperCase());
+		
+		if (user == null) return VALUE_NOT_EXISTS;
+		
+		return (Long.valueOf(updateUserDto.getIdUser()) == user.getIdUser()) ?  VALUE_NOT_EXISTS : VALUE_EXISTS;
+
+	}
+	
+	public boolean documentExists(UpdateUserFormDto updateUserDto) {
+		
+		User user = userRepository.findByDocument(updateUserDto.getDocument());
+		
+		if (user == null) return VALUE_NOT_EXISTS;
+		
+		return (Long.valueOf(updateUserDto.getIdUser()) == user.getIdUser()) ?  VALUE_NOT_EXISTS : VALUE_EXISTS;
+
+	}
+
 }

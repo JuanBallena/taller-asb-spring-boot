@@ -1,6 +1,6 @@
 package com.taller.asb.annotations;
 
-import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
@@ -10,23 +10,16 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.taller.asb.manager.Uniqueable;
 
-
-@Target({FIELD})
+@Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueValueImpl.class)
+@Constraint(validatedBy =  { UniqueUsernameImpl.class })
 @Documented
-public @interface UniqueValue {
-	
-	String message() default "existing value";
-	
-	String field();
-	
-	Class<? extends Uniqueable> manager();
+public @interface UniqueUsername {
+
+	String message() default "Existing username";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
-    
 }

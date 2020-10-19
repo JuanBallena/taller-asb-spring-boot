@@ -3,6 +3,7 @@ package com.taller.asb.error;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,11 +39,31 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		HttpStatus status, 
 		WebRequest request
 	) {
-		List<String> validationErrors = exception.getBindingResult()
+		
+		List<String> validationErrors = new LinkedList<String>();
+		
+		List<FieldError> filedErrors = exception.getBindingResult().getFieldErrors();
+		List<ObjectError> objectErrors = exception.getBindingResult().getGlobalErrors();
+		
+		for (FieldError error : filedErrors) {
+			validationErrors.add(error.getField() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage());
+		}
+		
+		for (ObjectError error : objectErrors) {
+			validationErrors.add(error.getCode() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage());
+		}
+		
+		/*validationErrors = exception.getBindingResult()
 				.getFieldErrors()
 				.stream()
 				.map(error -> error.getField() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage())
-				.collect(Collectors.toList());
+				.collect(Collectors.toList());*/
+		
+//		exception.getBindingResult().getGlobalErrors().forEach(objectError -> {
+//            if (objectError.getCode().contains("ConfirmPassword")) {
+//                fieldErrorMap.put("confirmPassword", objectError.getDefaultMessage());
+//            }
+//        });
 		
 		return getExceptionResponseEntity(exception, HttpStatus.BAD_REQUEST, request, validationErrors);
 	}

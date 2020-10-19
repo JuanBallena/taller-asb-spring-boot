@@ -1,6 +1,6 @@
 package com.taller.asb.annotations;
 
-import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
@@ -10,17 +10,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.taller.asb.manager.UniqueValueManager;
-
-@Target({FIELD})
+@Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueValueImpl.class)
+@Constraint(validatedBy =  { UniqueDocumentImpl.class })
 @Documented
-public @interface UniqueUpdate {
+public @interface UniqueDocument {
 
-String message() default "Value unique exists in database";
-	
-	Class<? extends UniqueValueManager> manager();
+	String message() default "Existing document";
 
     Class<?>[] groups() default {};
 

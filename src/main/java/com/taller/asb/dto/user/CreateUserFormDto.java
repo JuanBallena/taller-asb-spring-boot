@@ -16,10 +16,10 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class CreateUserDto {
+public class CreateUserFormDto {
 	
 	//@JsonProperty(required = true)
-	@UniqueValue(column = "User_Username", manager = UserManager.class, message="Username exists")
+	@UniqueValue(field = "User_Username", manager = UserManager.class, message="Username exists")
 	@NotNull(message = "Username not null")
 	@NotEmpty(message = "Username not empty")
 	@NotBlank(message = "Username not blank")
@@ -54,7 +54,7 @@ public class CreateUserDto {
 	private Integer idDocumentType;
 	
 	//@JsonProperty(required = true)
-	@UniqueValue(column = "User_Document", manager = UserManager.class, message="Document exists")
+	@UniqueValue(field = "User_Document", manager = UserManager.class, message="Document exists")
 	@NotNull(message = "Document not null")
 	@NotEmpty(message = "Document not empty")
 	@NotBlank(message = "Document not blank")

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import com.taller.asb.dto.ParameterDto;
 import com.taller.asb.dto.RoleDto;
-import com.taller.asb.dto.user.CreateUserDto;
-import com.taller.asb.dto.user.UpdateUserDto;
+import com.taller.asb.dto.user.CreateUserFormDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
 import com.taller.asb.model.Parameter;
 import com.taller.asb.model.Role;
@@ -49,10 +49,45 @@ public class UserConverter {
 				.build();
 	}
 	
+	public User toUserModel(CreateUserFormDto createUserFormDto) {
+		return User.builder()
+				.username(createUserFormDto.getUsername().toUpperCase())
+				.password(createUserFormDto.getPassword())
+				.role(Role.builder()
+						.idRole(Long.valueOf(createUserFormDto.getIdRole()))
+						.build())
+				.name(createUserFormDto.getName().toUpperCase())
+				.lastName(createUserFormDto.getLastName().toUpperCase())
+				.documentType(Parameter.builder()
+						.idParameter(Long.valueOf(createUserFormDto.getIdDocumentType()))
+						.build())
+				.document(createUserFormDto.getDocument())
+				.address(createUserFormDto.getAddress())
+				.phone(createUserFormDto.getPhone())
+				.build();
+	}
+	
+	public User toUserModel(UpdateUserFormDto updateUserFormDto) {
+		return User.builder()
+				.idUser(Long.valueOf(updateUserFormDto.getIdUser()))
+				.username(updateUserFormDto.getUsername().toUpperCase())
+				.password(updateUserFormDto.getPassword())
+				.role(Role.builder()
+						.idRole(Long.valueOf(updateUserFormDto.getIdRole()))
+						.build())
+				.name(updateUserFormDto.getName().toUpperCase())
+				.lastName(updateUserFormDto.getLastName().toUpperCase())
+				.documentType(Parameter.builder()
+						.idParameter(Long.valueOf(updateUserFormDto.getIdDocumentType()))
+						.build())
+				.document(updateUserFormDto.getDocument())
+				.address(updateUserFormDto.getAddress())
+				.phone(updateUserFormDto.getPhone())
+				.build();
+	}
+	
 	public Page<UserDto> toUserDtoPage(Page<User> userPage) {
-		if (userPage == null) {
-			return null;
-		}
+		if (userPage == null) return null;
 		
 		Page<UserDto> userDtoPage = userPage.map((Function<User, UserDto>) user -> {
 			return toUserDto(user);
@@ -63,9 +98,7 @@ public class UserConverter {
 	
 	public List<UserDto> toUserDtoList(List<User> userList) {
 		
-		if (userList == null) {
-			return null;
-		}
+		if (userList == null) return null;
 		
 		List<UserDto> userDtoList= new LinkedList<UserDto>();
 		
@@ -76,40 +109,7 @@ public class UserConverter {
 		return userDtoList;
 	}
 	
-	public User toUserModelForCreate(CreateUserDto createUserDto) {
-		return User.builder()
-				.username(createUserDto.getUsername().toUpperCase())
-				.password(createUserDto.getPassword())
-				.role(Role.builder()
-						.idRole(Long.valueOf(createUserDto.getIdRole()))
-						.build())
-				.name(createUserDto.getName().toUpperCase())
-				.lastName(createUserDto.getLastName().toUpperCase())
-				.documentType(Parameter.builder()
-						.idParameter(Long.valueOf(createUserDto.getIdDocumentType()))
-						.build())
-				.document(createUserDto.getDocument())
-				.address(createUserDto.getAddress())
-				.phone(createUserDto.getPhone())
-				.build();
-	}
 	
-	public User toUserModelForUpdate(UpdateUserDto updateUserDto) {
-		return User.builder()
-				.idUser(Long.valueOf(updateUserDto.getIdUser()))
-				.username(updateUserDto.getUsername().toUpperCase())
-				.password(updateUserDto.getPassword())
-				.role(Role.builder()
-						.idRole(Long.valueOf(updateUserDto.getIdRole()))
-						.build())
-				.name(updateUserDto.getName().toUpperCase())
-				.lastName(updateUserDto.getLastName().toUpperCase())
-				.documentType(Parameter.builder()
-						.idParameter(Long.valueOf(updateUserDto.getIdDocumentType()))
-						.build())
-				.document(updateUserDto.getDocument())
-				.address(updateUserDto.getAddress())
-				.phone(updateUserDto.getPhone())
-				.build();
-	}
+	
+	
 }

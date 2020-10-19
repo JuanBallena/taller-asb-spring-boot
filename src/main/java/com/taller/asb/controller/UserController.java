@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taller.asb.definition.ResponseDefinition;
-import com.taller.asb.dto.user.CreateUserDto;
-import com.taller.asb.dto.user.UpdateUserDto;
+import com.taller.asb.dto.user.CreateUserFormDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
 import com.taller.asb.manager.UserManager;
 import com.taller.asb.response.ResponsePage;
@@ -29,7 +29,7 @@ import com.taller.asb.response.ResponseUtil;
 @Validated
 public class UserController {
 	
-	private static final String NODE_USER_LIST = "user_list";
+	//private static final String NODE_USER_LIST = "user_list";
 	private static final String NODE_USER = "user";
 
 	@Autowired
@@ -97,14 +97,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/users")
-	public Map<String, Object> saveUser(@Valid @RequestBody CreateUserDto createUserDto) {
+	public Map<String, Object> saveUser(
+		@Valid @RequestBody CreateUserFormDto createUserFormDto
+	) {
 
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
 
 		try {
-			responseService.setData(userManager.saveUser(createUserDto));
+			responseService.setData(userManager.saveUser(createUserFormDto));
 			responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
 			responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
 		} catch (Exception e) {
@@ -116,7 +118,7 @@ public class UserController {
 	
 	@PutMapping("/users/{idUser}")
 	public Map<String, Object> updateUser(
-		@Valid @RequestBody UpdateUserDto updateUserDto,
+		@Valid @RequestBody UpdateUserFormDto updateUserFormDto,
 		@PathVariable("idUser") @Positive(message = "Id de usuario debe ser mayor a 0") Long idUser
 	) {
 		
@@ -126,7 +128,7 @@ public class UserController {
 			UserDto userDto = userManager.getUser(idUser);
 			
 			if (userDto != null) {
-				responseService.setData(userManager.updateUser(updateUserDto));
+				responseService.setData(userManager.updateUser(updateUserFormDto));
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
 			} else {
