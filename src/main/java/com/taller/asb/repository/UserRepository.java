@@ -15,4 +15,8 @@ public interface UserRepository extends CustomRepository<User, Long> {
 	public User findByIdUser(Long idUser);
 	public User findByUsername(String username);
 	public User findByDocument(String document);
+	
+//	@Modifying
+//	@Query(value = "UPDATE users u SET u.User_Id001Status = ?2 WHERE User_Id = ?1", nativeQuery = true)
+//	public User updateUserStatus(Long idUser, Integer idStatus);
 }

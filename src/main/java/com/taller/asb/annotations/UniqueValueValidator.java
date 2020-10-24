@@ -10,14 +10,14 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import com.taller.asb.manager.Uniqueable;
+import com.taller.asb.interfaces.Uniqueable;
 
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueValueImpl.class)
+@Constraint(validatedBy = UniqueValueValidatorImpl.class)
 @Documented
-public @interface UniqueValue {
+public @interface UniqueValueValidator {
 	
 	String message() default "existing value";
 	

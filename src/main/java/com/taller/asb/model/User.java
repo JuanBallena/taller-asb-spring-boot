@@ -25,50 +25,63 @@ import lombok.ToString;
 @ToString(callSuper=true, includeFieldNames=true)
 @Table(name="users")
 @Entity
-
 public class User {
+	
+	public static final String FIELD_ID = "User_Id";
+	public static final String FIELD_USERNAME = "User_Username";
+	public static final String FIELD_PASSWORD = "User_Password";
+	public static final String FIELD_ID_ROLE = "User_IdRole";
+	public static final String FIELD_URL_LOCATION_PHOTO = "User_UrlLocationPhoto";
+	public static final String FIELD_NAME = "User_Name";
+	public static final String FIELD_LAST_NAME = "User_LastName";
+	public static final String FIELD_ID_002_DOCUMENT_TYPE = "User_Id002DocumentType";
+	public static final String FIELD_DOCUMENT = "User_Document";
+	public static final String FIELD_ADDRESS = "User_Address";
+	public static final String FIELD_PHONE = "User_Phone";
+	public static final String FIELD_CHANGE_PASSWORD = "User_ChangePassword";
+	public static final String FIELD_ID_001_STATUS = "User_Id001Status";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="User_Id")
+	@Column(name = FIELD_ID)
 	private Long idUser;
 	
-	@Column(name="User_Username")
+	@Column(name = FIELD_USERNAME)
 	private String username;
 	
-	@Column(name="User_Password")
+	@Column(name = FIELD_PASSWORD )
 	private String password;
 	
 	@ManyToOne
-	@JoinColumn(name="User_IdRole")
+	@JoinColumn(name = FIELD_ID_ROLE)
 	private Role role;
 	
-	@Column(name="User_UrlLocationPhoto")
+	@Column(name = FIELD_URL_LOCATION_PHOTO)
 	private String urlLocationPhoto;
 	
-	@Column(name="User_Name")
+	@Column(name = FIELD_NAME)
 	private String name;
 	
-	@Column(name="User_LastName")
+	@Column(name = FIELD_LAST_NAME)
 	private String lastName;
 	
 	@ManyToOne
-	@JoinColumn(name="User_Id002DocumentType")
+	@JoinColumn(name = FIELD_ID_002_DOCUMENT_TYPE)
 	private Parameter documentType;
 	
-	@Column(name="User_Document")
+	@Column(name = FIELD_DOCUMENT)
 	private String document;
 	
-	@Column(name="User_Address")
+	@Column(name = FIELD_ADDRESS)
 	private String address;
 	
-	@Column(name="User_Phone")
+	@Column(name = FIELD_PHONE)
 	private String phone;
 	
-	@Column(name="User_ChangePassword", insertable = false, updatable = false)
+	@Column(name = FIELD_CHANGE_PASSWORD, insertable = false)
 	private Boolean changePassword;
 	
 	@ManyToOne
-	@JoinColumn(name="User_Id001Status", insertable = false, updatable = false)
+	@JoinColumn(name = FIELD_ID_001_STATUS, insertable = false)
 	private Parameter status;
 }

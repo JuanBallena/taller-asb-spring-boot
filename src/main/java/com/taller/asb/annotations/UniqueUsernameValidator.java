@@ -13,9 +13,9 @@ import javax.validation.Payload;
 
 @Target({TYPE})
 @Retention(RUNTIME)
-@Constraint(validatedBy =  { UniqueUsernameImpl.class })
+@Constraint(validatedBy =  { UniqueUsernameValidatorImpl.class })
 @Documented
-public @interface UniqueUsername {
+public @interface UniqueUsernameValidator {
 
 	String message() default "Existing username";
 

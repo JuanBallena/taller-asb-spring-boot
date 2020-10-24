@@ -23,9 +23,15 @@ public class ResponseDefinition {
 	public static final Integer RESPONSECODE_NOT_FOUND = 404;
 	public static final String RESPONSECODE_NOT_FOUND_S = "Sin contenido";
 	
+	public static final Integer RESPONSECODE_UNPROCESSABLE_ENTITY = 422;
+	public static final String RESPONSECODE_UNPROCESSABLE_ENTITY_S = "Entidad no procesable, error semántico";
+	
 	public static final Integer RESPONSECODE_INTERNAL_SERVER_ERROR = 500;
 	public static final String RESPONSECODE_INTERNAL_SERVER_ERROR_S = "Error de servidor";
 	
-	public static final Integer RESPONSECODE_ERROR_GENERAL = 9999;
-	public static final String RESPONSECODE_ERROR_GENERAL_S = "Error general";
+	public static final Integer RESPONSECODE_SERVICE_UNAVAILABLE = 503;
+	public static final String RESPONSECODE_SERVICE_UNAVAILABLE_S = "Servicio no disponible";
+	
+//	public static final Integer RESPONSECODE_ERROR_GENERAL = 9999;
+//	public static final String RESPONSECODE_ERROR_GENERAL_S = "Error general";
 }

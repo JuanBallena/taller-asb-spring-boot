@@ -67,27 +67,28 @@ public class UserConverter {
 				.build();
 	}
 	
-	public User toUserModel(UpdateUserFormDto updateUserFormDto) {
-		return User.builder()
-				.idUser(Long.valueOf(updateUserFormDto.getIdUser()))
-				.username(updateUserFormDto.getUsername().toUpperCase())
-				.password(updateUserFormDto.getPassword())
-				.role(Role.builder()
-						.idRole(Long.valueOf(updateUserFormDto.getIdRole()))
-						.build())
-				.name(updateUserFormDto.getName().toUpperCase())
-				.lastName(updateUserFormDto.getLastName().toUpperCase())
-				.documentType(Parameter.builder()
-						.idParameter(Long.valueOf(updateUserFormDto.getIdDocumentType()))
-						.build())
-				.document(updateUserFormDto.getDocument())
-				.address(updateUserFormDto.getAddress())
-				.phone(updateUserFormDto.getPhone())
-				.build();
+	public User replaceValuesInUserModel(User user, UpdateUserFormDto updateUserFormDto) {
+		user.setUsername(updateUserFormDto.getUsername().toUpperCase());
+		user.setPassword(updateUserFormDto.getPassword());
+		user.setRole(Role.builder()
+				.idRole(Long.valueOf(updateUserFormDto.getIdRole()))
+				.build());
+		user.setName(updateUserFormDto.getName());
+		user.setLastName(updateUserFormDto.getLastName());
+		user.setDocumentType(Parameter.builder()
+				.idParameter(Long.valueOf(updateUserFormDto.getIdDocumentType()))
+				.build());
+		user.setDocument(updateUserFormDto.getDocument());
+		user.setAddress(updateUserFormDto.getAddress());
+		user.setPhone(updateUserFormDto.getPhone());
+		user.setStatus(Parameter.builder()
+				.idParameter(Long.valueOf(updateUserFormDto.getIdStatus()))
+				.build());
+		
+		return user;
 	}
 	
 	public Page<UserDto> toUserDtoPage(Page<User> userPage) {
-		if (userPage == null) return null;
 		
 		Page<UserDto> userDtoPage = userPage.map((Function<User, UserDto>) user -> {
 			return toUserDto(user);
@@ -98,8 +99,6 @@ public class UserConverter {
 	
 	public List<UserDto> toUserDtoList(List<User> userList) {
 		
-		if (userList == null) return null;
-		
 		List<UserDto> userDtoList= new LinkedList<UserDto>();
 		
 		for (User user : userList) {
@@ -108,8 +107,4 @@ public class UserConverter {
 		
 		return userDtoList;
 	}
-	
-	
-	
-	
 }

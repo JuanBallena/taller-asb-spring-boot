@@ -35,8 +35,8 @@ public class ExStudentController {
 	) {
 		
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
 			ResponsePage responsePage = exStudentManager.getExStudentList(search, page, size);
@@ -56,8 +56,8 @@ public class ExStudentController {
 	public Map<String, Object> getExStudentList(@PathVariable("idExStudent") @Positive Long idExStudent) {
 		
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
 			responseService.setData(exStudentManager.getExStudent(idExStudent));

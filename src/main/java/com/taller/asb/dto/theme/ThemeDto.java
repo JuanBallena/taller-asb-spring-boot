@@ -16,4 +16,5 @@ public class ThemeDto {
 	private String author;
 	private String urlThemeYoutube;
 	private ParameterDto allowedGroup;
+	private Object links;
 }

@@ -17,11 +17,12 @@ import lombok.ToString;
 @Component
 public class ResponseService {
 
+	private String type;
 	private Integer responseCode;
-    private Object responseMessage;
-    private Object responseError;
+    private String responseMessage;
     private String token;
     private Object data;
 	private int pages;
+	private Object responseError;
 	
 }

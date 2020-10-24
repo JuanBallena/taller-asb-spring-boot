@@ -6,9 +6,9 @@ import javax.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
-import com.taller.asb.manager.Uniqueable;
+import com.taller.asb.interfaces.Uniqueable;
 
-public class UniqueValueImpl implements ConstraintValidator<UniqueValue, Object> {
+public class UniqueValueValidatorImpl implements ConstraintValidator<UniqueValueValidator, Object> {
 	
 	@Autowired
 	private ApplicationContext applicationContext;
@@ -16,16 +16,16 @@ public class UniqueValueImpl implements ConstraintValidator<UniqueValue, Object>
 	private String field;
 	
 	@Override
-    public void initialize(UniqueValue uniqueValue) {
+    public void initialize(UniqueValueValidator uniqueValueValidator) {
 
-		Class<? extends Uniqueable> clazz = uniqueValue.manager();
+		Class<? extends Uniqueable> clazz = uniqueValueValidator.manager();
 		this.uniqueable = this.applicationContext.getBean(clazz);
-		this.field = uniqueValue.field();
+		this.field = uniqueValueValidator.field();
 	}
 	
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
     	
-    	return uniqueable.valueExists(field, value);
+    	return uniqueable.uniqueInDatabase(field, value);
     }
 }

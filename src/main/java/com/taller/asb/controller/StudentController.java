@@ -42,8 +42,8 @@ public class StudentController {
 	) {
 		
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
 			ResponsePage responsePage = studentManager.getStudentList(search, page, size);
@@ -63,8 +63,8 @@ public class StudentController {
 	public Map<String,Object> getStudent(@PathVariable("idStudent") @Positive Long idStudent) {
 		
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
 			
@@ -82,8 +82,8 @@ public class StudentController {
 	public Map<String,Object> saveStudent(@Valid @RequestBody CreateStudentDto createStudentDto) {
 
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
 			responseService.setData(studentManager.saveStudent(createStudentDto));

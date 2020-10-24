@@ -46,11 +46,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 		List<ObjectError> objectErrors = exception.getBindingResult().getGlobalErrors();
 		
 		for (FieldError error : filedErrors) {
-			validationErrors.add(error.getField() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage());
+			validationErrors.add(/*error.getField() + FIELD_ERROR_SEPARATOR +*/ error.getDefaultMessage());
 		}
 		
 		for (ObjectError error : objectErrors) {
-			validationErrors.add(error.getCode() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage());
+			validationErrors.add(/*error.getCode() + FIELD_ERROR_SEPARATOR + */error.getDefaultMessage());
 		}
 		
 		/*validationErrors = exception.getBindingResult()
@@ -58,12 +58,6 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
 				.stream()
 				.map(error -> error.getField() + FIELD_ERROR_SEPARATOR + error.getDefaultMessage())
 				.collect(Collectors.toList());*/
-		
-//		exception.getBindingResult().getGlobalErrors().forEach(objectError -> {
-//            if (objectError.getCode().contains("ConfirmPassword")) {
-//                fieldErrorMap.put("confirmPassword", objectError.getDefaultMessage());
-//            }
-//        });
 		
 		return getExceptionResponseEntity(exception, HttpStatus.BAD_REQUEST, request, validationErrors);
 	}

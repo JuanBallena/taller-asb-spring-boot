@@ -1,7 +1,5 @@
 package com.taller.asb.controller;
 
-import java.util.Map;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
@@ -19,126 +17,172 @@ import org.springframework.web.bind.annotation.RestController;
 import com.taller.asb.definition.ResponseDefinition;
 import com.taller.asb.dto.user.CreateUserFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
+import com.taller.asb.dto.user.UpdateChangePasswordFormDto;
 import com.taller.asb.dto.user.UserDto;
+import com.taller.asb.error.UriErrorMessages;
+import com.taller.asb.interfaces.SequenceValidation;
 import com.taller.asb.manager.UserManager;
 import com.taller.asb.response.ResponsePage;
 import com.taller.asb.response.ResponseService;
-import com.taller.asb.response.ResponseUtil;
 
 @RestController
 @Validated
 public class UserController {
 	
-	//private static final String NODE_USER_LIST = "user_list";
-	private static final String NODE_USER = "user";
+	private static final String USERS = "Users";
+	private static final String USER = "User";
 
 	@Autowired
 	private UserManager userManager;
 	
 	@GetMapping("/users")
 	public ResponseService getUserList(
-		@RequestParam(value="search", defaultValue = "") String search,
-		@RequestParam(value="page", defaultValue = "0") @Min(0) Integer page,
-		@RequestParam(value="size", defaultValue = "0") @Min(0) Integer size
+		@RequestParam(value="q", defaultValue = "") String query,
+		@RequestParam(value="page", defaultValue = "0") @Min(message = UriErrorMessages.MIN_PAGE_ERROR_MESSAGE , value = 0) Integer page,
+		@RequestParam(value="size", defaultValue = "0") @Min(message = UriErrorMessages.MIN_SIZE_ERROR_MESSAGE, value = 0) Integer size
 	) {
 		
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setType(USERS);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
-			ResponsePage responsePage = userManager.getUserList(search, page, size);
+			ResponsePage responsePage = userManager.getUserList(query, page, size);
 			
-//			if (responsePage.getData().size() == 0) {
-//				responseService.setData(responsePage.getData());
-//				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
-//				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
-//			}
-//			else {
+			if (responsePage.getData().size() == 0) {
+				responseService.setData(responsePage.getData());
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
 				responseService.setData(responsePage.getData());
 				responseService.setPages(responsePage.getTotalPages());
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
-//			}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 		return responseService;
-		//return ResponseUtil.buildResponse(NODE_USER_LIST, responseService);
 	}
 	
 	@GetMapping("/users/{idUser}")
-	public Map<String, Object> getUser(
-		@PathVariable("idUser") @Positive(message = "Id de usuario debe ser mayor a 0") Long idUser
+	public ResponseService getUser(
+		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setType(USER);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
 			
-			UserDto userDto = userManager.getUser(idUser);	
-			
-			if (userDto != null) {
+			UserDto userDto = userManager.getUser(idUser);
+			if (userDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
 				responseService.setData(userDto);
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
-			} else {
-				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
-				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseUtil.buildResponse(NODE_USER, responseService);
+		return responseService;
 	}
 	
 	@PostMapping("/users")
-	public Map<String, Object> saveUser(
+	public ResponseService saveUser(
 		@Valid @RequestBody CreateUserFormDto createUserFormDto
 	) {
 
 		ResponseService responseService = new ResponseService();
-		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_ERROR_GENERAL);
-		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_ERROR_GENERAL_S);
+		responseService.setType(USER);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
-			responseService.setData(userManager.saveUser(createUserFormDto));
-			responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
-			responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
+			UserDto userDto = userManager.saveUser(createUserFormDto);
+			if (userDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE_S);
+			}
+			else {
+				responseService.setData(userDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseUtil.buildResponse(NODE_USER, responseService);
+		return responseService;
 	}
 	
 	@PutMapping("/users/{idUser}")
-	public Map<String, Object> updateUser(
-		@Valid @RequestBody UpdateUserFormDto updateUserFormDto,
-		@PathVariable("idUser") @Positive(message = "Id de usuario debe ser mayor a 0") Long idUser
+	public ResponseService updateUser(
+		@Validated(SequenceValidation.class) @RequestBody UpdateUserFormDto updateUserFormDto,
+		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
 	) {
-		
 		ResponseService responseService = new ResponseService();
+		responseService.setType(USER);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
-			UserDto userDto = userManager.getUser(idUser);
-			
-			if (userDto != null) {
-				responseService.setData(userManager.updateUser(updateUserFormDto));
-				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
-				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
-			} else {
-				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
-				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			if (idUser != Long.valueOf(updateUserFormDto.getIdUser())) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_UNPROCESSABLE_ENTITY);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_UNPROCESSABLE_ENTITY_S);
+				return responseService;
 			}
 			
+			UserDto userDto = userManager.updateUser(idUser, updateUserFormDto);
+			if (userDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			} 
+			else {
+				responseService.setData(userDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return ResponseUtil.buildResponse(NODE_USER, responseService);
+		return responseService;
+	}
+	
+	@PutMapping("/users/actions/change_password/{idUser}")
+	public ResponseService updateChangePassword(
+		@Valid @RequestBody UpdateChangePasswordFormDto updateChangePasswordFormDto,
+		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+	) {
+		ResponseService responseService = new ResponseService();
+		responseService.setType(USER);
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
+
+		try {
+			UserDto userDto = userManager.updateChangePassword(idUser, updateChangePasswordFormDto);
+			if (userDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
+				responseService.setData(userDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return responseService;
 	}
 }
