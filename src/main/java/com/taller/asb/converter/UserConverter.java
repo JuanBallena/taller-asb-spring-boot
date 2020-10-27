@@ -7,8 +7,10 @@ import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
+import com.taller.asb.definition.RoleDefinition;
 import com.taller.asb.dto.ParameterDto;
 import com.taller.asb.dto.RoleDto;
+import com.taller.asb.dto.student.CreateStudentFormDto;
 import com.taller.asb.dto.user.CreateUserFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
@@ -31,16 +33,6 @@ public class UserConverter {
 						.name(user.getRole().getName())
 						.displayName(user.getRole().getDisplayName())
 						.build())
-				.urlLocationPhoto(user.getUrlLocationPhoto())
-				.name(user.getName())
-				.lastName(user.getLastName())
-				.documentType(ParameterDto.builder()
-						.id(user.getDocumentType().getIdParameter())
-						.description(user.getDocumentType().getDescription())
-						.build())
-				.document(user.getDocument())
-				.address(user.getAddress())
-				.phone(user.getPhone())
 				.changePassword(user.getChangePassword())
 				.status(ParameterDto.builder()
 						.id(user.getStatus().getIdParameter())
@@ -56,14 +48,16 @@ public class UserConverter {
 				.role(Role.builder()
 						.idRole(Long.valueOf(createUserFormDto.getIdRole()))
 						.build())
-				.name(createUserFormDto.getName().toUpperCase())
-				.lastName(createUserFormDto.getLastName().toUpperCase())
-				.documentType(Parameter.builder()
-						.idParameter(Long.valueOf(createUserFormDto.getIdDocumentType()))
+				.build();
+	}
+	
+	public User toUserModel(CreateStudentFormDto createStudentFormDto) {
+		return User.builder()
+				.username(createStudentFormDto.getUsername().toUpperCase())
+				.password(createStudentFormDto.getPassword())
+				.role(Role.builder()
+						.idRole(RoleDefinition.ROLE_STUDENT)
 						.build())
-				.document(createUserFormDto.getDocument())
-				.address(createUserFormDto.getAddress())
-				.phone(createUserFormDto.getPhone())
 				.build();
 	}
 	
@@ -73,14 +67,6 @@ public class UserConverter {
 		user.setRole(Role.builder()
 				.idRole(Long.valueOf(updateUserFormDto.getIdRole()))
 				.build());
-		user.setName(updateUserFormDto.getName());
-		user.setLastName(updateUserFormDto.getLastName());
-		user.setDocumentType(Parameter.builder()
-				.idParameter(Long.valueOf(updateUserFormDto.getIdDocumentType()))
-				.build());
-		user.setDocument(updateUserFormDto.getDocument());
-		user.setAddress(updateUserFormDto.getAddress());
-		user.setPhone(updateUserFormDto.getPhone());
 		user.setStatus(Parameter.builder()
 				.idParameter(Long.valueOf(updateUserFormDto.getIdStatus()))
 				.build());

@@ -31,7 +31,5 @@ public class ResponseDefinition {
 	
 	public static final Integer RESPONSECODE_SERVICE_UNAVAILABLE = 503;
 	public static final String RESPONSECODE_SERVICE_UNAVAILABLE_S = "Servicio no disponible";
-	
-//	public static final Integer RESPONSECODE_ERROR_GENERAL = 9999;
-//	public static final String RESPONSECODE_ERROR_GENERAL_S = "Error general";
+
 }

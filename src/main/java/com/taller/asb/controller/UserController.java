@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taller.asb.definition.ResponseDefinition;
+import com.taller.asb.definition.TypeDefinition;
 import com.taller.asb.dto.user.CreateUserFormDto;
-import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UpdateChangePasswordFormDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
-import com.taller.asb.error.UriErrorMessages;
+import com.taller.asb.error.ErrorMessage;
 import com.taller.asb.interfaces.SequenceValidation;
 import com.taller.asb.manager.UserManager;
 import com.taller.asb.response.ResponsePage;
@@ -29,21 +30,16 @@ import com.taller.asb.response.ResponseService;
 @Validated
 public class UserController {
 	
-	private static final String USERS = "Users";
-	private static final String USER = "User";
-
 	@Autowired
 	private UserManager userManager;
 	
 	@GetMapping("/users")
 	public ResponseService getUserList(
 		@RequestParam(value="q", defaultValue = "") String query,
-		@RequestParam(value="page", defaultValue = "0") @Min(message = UriErrorMessages.MIN_PAGE_ERROR_MESSAGE , value = 0) Integer page,
-		@RequestParam(value="size", defaultValue = "0") @Min(message = UriErrorMessages.MIN_SIZE_ERROR_MESSAGE, value = 0) Integer size
+		@RequestParam(value="page", defaultValue = "0") @Min(message = ErrorMessage.MIN_PAGE_ERROR_MESSAGE , value = 0) Integer page,
+		@RequestParam(value="size", defaultValue = "0") @Min(message = ErrorMessage.MIN_SIZE_ERROR_MESSAGE, value = 0) Integer size
 	) {
-		
 		ResponseService responseService = new ResponseService();
-		responseService.setType(USERS);
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
@@ -56,6 +52,7 @@ public class UserController {
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
 			}
 			else {
+				responseService.setType(TypeDefinition.USERS);
 				responseService.setData(responsePage.getData());
 				responseService.setPages(responsePage.getTotalPages());
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
@@ -70,26 +67,25 @@ public class UserController {
 	
 	@GetMapping("/users/{idUser}")
 	public ResponseService getUser(
-		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
-		responseService.setType(USER);
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
 		try {
-			
 			UserDto userDto = userManager.getUser(idUser);
+			
 			if (userDto == null) {
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
 			}
 			else {
+				responseService.setType(TypeDefinition.USER);
 				responseService.setData(userDto);
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -101,19 +97,19 @@ public class UserController {
 	public ResponseService saveUser(
 		@Valid @RequestBody CreateUserFormDto createUserFormDto
 	) {
-
 		ResponseService responseService = new ResponseService();
-		responseService.setType(USER);
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
 			UserDto userDto = userManager.saveUser(createUserFormDto);
+			
 			if (userDto == null) {
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE_S);
 			}
 			else {
+				responseService.setType(TypeDefinition.USER);
 				responseService.setData(userDto);
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
@@ -128,10 +124,9 @@ public class UserController {
 	@PutMapping("/users/{idUser}")
 	public ResponseService updateUser(
 		@Validated(SequenceValidation.class) @RequestBody UpdateUserFormDto updateUserFormDto,
-		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
-		responseService.setType(USER);
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 		
@@ -143,11 +138,13 @@ public class UserController {
 			}
 			
 			UserDto userDto = userManager.updateUser(idUser, updateUserFormDto);
+			
 			if (userDto == null) {
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
 			} 
 			else {
+				responseService.setType(TypeDefinition.USER);
 				responseService.setData(userDto);
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
@@ -155,26 +152,28 @@ public class UserController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		return responseService;
 	}
 	
 	@PutMapping("/users/actions/change_password/{idUser}")
 	public ResponseService updateChangePassword(
 		@Valid @RequestBody UpdateChangePasswordFormDto updateChangePasswordFormDto,
-		@PathVariable("idUser") @Positive(message = UriErrorMessages.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
-		responseService.setType(USER);
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
 			UserDto userDto = userManager.updateChangePassword(idUser, updateChangePasswordFormDto);
+			
 			if (userDto == null) {
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
 			}
 			else {
+				responseService.setType(TypeDefinition.USER);
 				responseService.setData(userDto);
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
 				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);

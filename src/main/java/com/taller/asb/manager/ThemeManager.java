@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.taller.asb.converter.ThemeConverter;
+import com.taller.asb.definition.EntityDefinition;
 import com.taller.asb.dto.theme.CreateThemeFormDto;
 import com.taller.asb.dto.theme.ThemeDto;
 import com.taller.asb.dto.theme.UpdateThemeFormDto;
@@ -18,9 +19,6 @@ import com.taller.asb.response.ResponsePage;
 
 @Service
 public class ThemeManager implements Existable {
-	
-	private static final Boolean ENTITY_EXISTS = true;
-	private static final Boolean ENTITY_NOT_EXISTS = false;
 	
 	@Autowired
 	private ThemeRepository themeRepository;
@@ -89,6 +87,7 @@ public class ThemeManager implements Existable {
 	}
 	
 	public ThemeDto updateTheme(Long idTheme, UpdateThemeFormDto updateThemeFormDto) {
+		
 		Theme theme = themeRepository.findByIdTheme(idTheme);
 		if (theme == null) return null;
 		theme = themeConverter.replaceValuesInThemeModel(theme, updateThemeFormDto);
@@ -99,8 +98,12 @@ public class ThemeManager implements Existable {
 	}
 
 	@Override
-	public boolean existsInDatabase(Long id) {
+	public boolean entityExistsInDatabase(Long id) {
+		
 		Theme theme = themeRepository.findByIdTheme(id);
-		return theme == null ? ENTITY_NOT_EXISTS : ENTITY_EXISTS;
+		
+		return theme == null 
+			? EntityDefinition.ENTITY_NOT_EXISTS 
+			: EntityDefinition.ENTITY_EXISTS;
 	}
 }

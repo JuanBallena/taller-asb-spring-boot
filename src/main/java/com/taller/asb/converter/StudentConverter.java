@@ -1,24 +1,21 @@
 package com.taller.asb.converter;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import com.taller.asb.controller.UserController;
 import com.taller.asb.dto.ParameterDto;
-import com.taller.asb.dto.student.CreateStudentDto;
+import com.taller.asb.dto.student.CreateStudentFormDto;
 import com.taller.asb.dto.student.StudentDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.hateoas.LinkCreator;
+import com.taller.asb.model.Parameter;
 import com.taller.asb.model.Student;
+import com.taller.asb.model.User;
 
 @Component
 public class StudentConverter {
@@ -35,23 +32,35 @@ public class StudentConverter {
 		
 		return StudentDto.builder()
 				.id(student.getIdStudent())
-				.name(student.getUser().getName())
-				.lastName(student.getUser().getLastName())
-				.urlLocationPhoto(student.getUser().getUrlLocationPhoto())
+				.name(student.getName())
+				.lastName(student.getLastName())
+				.urlLocationPhoto(student.getUrlLocationPhoto())
 				.documentType(ParameterDto.builder()
-						.id(student.getUser().getDocumentType().getIdParameter())
-						.description(student.getUser().getDocumentType().getDescription())
+						.id(student.getDocumentType().getIdParameter())
+						.description(student.getDocumentType().getDescription())
 						.build())
-				.document(student.getUser().getDocument())
-				.address(student.getUser().getAddress())
-				.phone(student.getUser().getPhone())
+				.document(student.getDocument())
+				.address(student.getAddress())
+				.phone(student.getPhone())
 				.links(links)
 				.build();
 	}
 	
+	public Student toStudentModel(CreateStudentFormDto createStudentFormDto, User user) {
+		return Student.builder()
+				.user(user)
+				.name(createStudentFormDto.getName())
+				.lastName(createStudentFormDto.getLastName())
+				.documentType(Parameter.builder()
+						.idParameter(Long.valueOf(createStudentFormDto.getIdDocumentType()))
+						.build())
+				.document(createStudentFormDto.getDocument())
+				.address(createStudentFormDto.getAddress())
+				.phone(createStudentFormDto.getPhone())
+				.build();
+	}
+	
 	public Page<StudentDto> toStudentDtoPage(Page<Student> studentPage) {
-		
-		if (studentPage == null) return null;
 		
 		Page<StudentDto> studentDtoPage = studentPage.map((Function<Student, StudentDto>) student -> {
 			return toStudentDto(student);
@@ -62,8 +71,6 @@ public class StudentConverter {
 	
 	public List<StudentDto> toStudentDtoList(List<Student> studentList) {
 		
-		if (studentList == null) return null;
-		
 		List<StudentDto> studentDtoList = new LinkedList<StudentDto>();
 		for (Student student : studentList) {
 			studentDtoList.add(toStudentDto(student));
@@ -72,22 +79,12 @@ public class StudentConverter {
 		return studentDtoList;
 	}
 	
-	public Student toStudentModel(CreateStudentDto createStudentDto) {
-		
-		if (createStudentDto == null) return null;
-		
-		return null;
-	}
+	
 	
 	public Student toStudentModel(UpdateUserFormDto updateStudentDto) {
 		
 		if (updateStudentDto == null) return null;
 		
 		return null;
-	}
-	
-	public Object createLinkToUser(Long idUser) {
-		WebMvcLinkBuilder linkToUser = linkTo(methodOn(UserController.class).getUser(idUser));
-		return linkToUser.withRel("user");
 	}
 }

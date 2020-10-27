@@ -9,12 +9,12 @@ import com.taller.asb.model.User;
 
 public interface UserRepository extends CustomRepository<User, Long> {
 	
-	public List<User> findByNameContainingOrLastNameContaining(String name, String lastName);
-	public Page<User> findByNameContainingOrLastNameContaining(String name, String lastName, Pageable page);
+	public List<User> findByUsernameContaining(String username);
+	public Page<User> findByUsernameContaining(String username, Pageable page);
 	
 	public User findByIdUser(Long idUser);
 	public User findByUsername(String username);
-	public User findByDocument(String document);
+	
 	
 //	@Modifying
 //	@Query(value = "UPDATE users u SET u.User_Id001Status = ?2 WHERE User_Id = ?1", nativeQuery = true)

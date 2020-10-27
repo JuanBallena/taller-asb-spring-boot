@@ -1,6 +1,6 @@
 package com.taller.asb.annotations;
 
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
@@ -10,14 +10,19 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
+import com.taller.asb.interfaces.Uniqueable;
 
-@Target({TYPE})
+@Target({METHOD})
 @Retention(RUNTIME)
-@Constraint(validatedBy =  { UniqueUsernameValidatorImpl.class })
+@Constraint(validatedBy = UniqueValueOnUpdateImpl.class)
 @Documented
-public @interface UniqueUsernameValidator {
+public @interface UniqueValueOnUpdate {
 
-	String message() default "Existing username";
+String message() default "existing value";
+	
+	String field();
+
+	Class<? extends Uniqueable> manager();
 
     Class<?>[] groups() default {};
 

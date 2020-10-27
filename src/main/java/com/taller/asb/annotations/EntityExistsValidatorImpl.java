@@ -24,6 +24,6 @@ public class EntityExistsValidatorImpl implements ConstraintValidator<EntityExis
     @Override
     public boolean isValid(Integer id, ConstraintValidatorContext context) {
     	
-    	return existable.existsInDatabase(Long.valueOf(id));
+    	return existable.entityExistsInDatabase(Long.valueOf(id));
     }
 }

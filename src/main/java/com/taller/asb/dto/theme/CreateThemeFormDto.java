@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.taller.asb.error.ThemeErrorMessages;
+import com.taller.asb.error.ErrorMessage;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,20 +17,20 @@ import lombok.Setter;
 @Setter
 public class CreateThemeFormDto {
 	
-	@NotNull(message = ThemeErrorMessages.NOT_NULL_TITLE_ERROR_MESSAGE)
-	@NotEmpty(message = ThemeErrorMessages.NOT_EMPTY_TITLE_ERROR_MESSAGE)
-	@NotBlank(message = ThemeErrorMessages.NOT_BLANK_TITLE_ERROR_MESSAGE)
+	@NotNull(message = ErrorMessage.NOT_NULL_TITLE_ERROR_MESSAGE)
+	@NotEmpty(message = ErrorMessage.NOT_EMPTY_TITLE_ERROR_MESSAGE)
+	@NotBlank(message = ErrorMessage.NOT_BLANK_TITLE_ERROR_MESSAGE)
 	private String title;
 	
-	@NotNull(message = ThemeErrorMessages.NOT_NULL_AUTHOR_ERROR_MESSAGE)
-	@NotEmpty(message = ThemeErrorMessages.NOT_EMPTY_AUTHOR_ERROR_MESSAGE)
-	@NotBlank(message = ThemeErrorMessages.NOT_BLANK_AUTHOR_ERROR_MESSAGE)
+	@NotNull(message = ErrorMessage.NOT_NULL_AUTHOR_ERROR_MESSAGE)
+	@NotEmpty(message = ErrorMessage.NOT_EMPTY_AUTHOR_ERROR_MESSAGE)
+	@NotBlank(message = ErrorMessage.NOT_BLANK_AUTHOR_ERROR_MESSAGE)
 	private String author;
 	
-	@NotBlank(message = ThemeErrorMessages.NOT_BLANK_URL_LOCATION_YOUTUBE_ERROR_MESSAGE)
+	@NotBlank(message = ErrorMessage.NOT_BLANK_URL_LOCATION_YOUTUBE_ERROR_MESSAGE)
 	private String urlLocationYoutube;
 	
-	@NotNull(message = ThemeErrorMessages.NOT_NULL_ID_ALLOWED_GROUP_ERROR_MESSAGE)
+	@NotNull(message = ErrorMessage.NOT_NULL_ID_ALLOWED_GROUP_ERROR_MESSAGE)
 	private Integer idAllowedGroup;
 	
 	@SuppressWarnings("unchecked")

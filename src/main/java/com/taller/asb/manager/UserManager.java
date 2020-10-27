@@ -8,9 +8,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.taller.asb.converter.UserConverter;
+import com.taller.asb.definition.EntityDefinition;
+import com.taller.asb.definition.FieldDefinition;
 import com.taller.asb.dto.user.CreateUserFormDto;
-import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UpdateChangePasswordFormDto;
+import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
 import com.taller.asb.interfaces.Existable;
 import com.taller.asb.interfaces.Uniqueable;
@@ -20,11 +22,6 @@ import com.taller.asb.response.ResponsePage;
 
 @Service
 public class UserManager implements Uniqueable, Existable {
-	
-	private static final Boolean VALUE_EXISTS = false;
-	private static final Boolean VALUE_NOT_EXISTS = true;
-	private static final Boolean ENTITY_EXISTS = true;
-	private static final Boolean ENTITY_NOT_EXISTS = false;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -38,12 +35,11 @@ public class UserManager implements Uniqueable, Existable {
 		
 		if (!query.isEmpty()) {
 			
-			String name = query;
-			String lastName = query;
+			String username = query;
 			
 			if (size > 0) {
 				
-				Page<User> userPage = userRepository.findByNameContainingOrLastNameContaining(name, lastName, PageRequest.of(page, size));
+				Page<User> userPage = userRepository.findByUsernameContaining(username, PageRequest.of(page, size));
 				Page<UserDto> userDtoPage = userConverter.toUserDtoPage(userPage);
 				responsePage.setData(userDtoPage.getContent());
 				responsePage.setTotalPages(userDtoPage.getTotalPages());
@@ -52,7 +48,7 @@ public class UserManager implements Uniqueable, Existable {
 			} 
 			else {
 				
-				List<User> userList = userRepository.findByNameContainingOrLastNameContaining(name, lastName);
+				List<User> userList = userRepository.findByUsernameContaining(username);
 				List<UserDto> userDtoList = userConverter.toUserDtoList(userList);
 				responsePage.setData(userDtoList);
 				responsePage.setTotalPages(userDtoList.size() == 0 ? 0 : 1);
@@ -120,43 +116,42 @@ public class UserManager implements Uniqueable, Existable {
 	}
 
 	@Override
-	public boolean uniqueInDatabase(String field, Object value) {
+	public boolean uniqueValueOnCreate(String field, Object value) {
 		
-		User user = new User();
-		switch (field) {
-			case User.FIELD_USERNAME:
-				user = userRepository.findByUsername(value.toString().toUpperCase());
-				return user == null ? VALUE_NOT_EXISTS : VALUE_EXISTS;
-			case User.FIELD_DOCUMENT:
-				user = userRepository.findByDocument(value.toString());
-				return user == null ? VALUE_NOT_EXISTS : VALUE_EXISTS;
-			default:
-				return VALUE_EXISTS;
+		User user = null;
+		
+		if (User.FIELD_USERNAME.equals(field)) {
+			user = userRepository.findByUsername(value.toString().toUpperCase());
 		}
-	}
-
-	public boolean uniqueUsernameInDatabase(UpdateUserFormDto updateUserDto) {
 		
-		User user = userRepository.findByUsername(updateUserDto.getUsername().toString().toUpperCase());
-		if (user == null) return VALUE_NOT_EXISTS;
-		
-		return (Long.valueOf(updateUserDto.getIdUser()) == user.getIdUser()) ? VALUE_NOT_EXISTS : VALUE_EXISTS;
+		return user == null
+				? FieldDefinition.FIELD_VALUE_NOT_EXISTS 
+				: FieldDefinition.FIELD_VALUE_EXISTS;
 	}
 	
-	public boolean uniqueDocumentInDatabase(UpdateUserFormDto updateUserDto) {
-		
-		User user = userRepository.findByDocument(updateUserDto.getDocument());
-		if (user == null) return VALUE_NOT_EXISTS;
-		
-		return (Long.valueOf(updateUserDto.getIdUser()) == user.getIdUser()) ? VALUE_NOT_EXISTS : VALUE_EXISTS;
-	}
-
 	@Override
-	public boolean existsInDatabase(Long id) {
+	public boolean uniqueValueOnUpdate(String field, Object value, Integer id) {
 		
-		User user = userRepository.findByIdUser(id);
+		User user = null;
 		
-		return user == null ? ENTITY_NOT_EXISTS : ENTITY_EXISTS;
+		if (User.FIELD_USERNAME.equals(field)) {
+			user = userRepository.findByUsername(value.toString().toUpperCase());
+		}
+		
+		if (user == null) return FieldDefinition.FIELD_VALUE_NOT_EXISTS;
+		
+		return (Long.valueOf(id) == user.getIdUser())
+			? FieldDefinition.FIELD_VALUE_NOT_EXISTS 
+			: FieldDefinition.FIELD_VALUE_EXISTS;
 	}
-
+	
+	@Override
+	public boolean entityExistsInDatabase(Long idUser) {
+		
+		User user = userRepository.findByIdUser(idUser);
+		
+		return user == null 
+			? EntityDefinition.ENTITY_NOT_EXISTS 
+			: EntityDefinition.ENTITY_EXISTS;
+	}
 }

@@ -15,9 +15,9 @@ import com.taller.asb.interfaces.Uniqueable;
 
 @Target({FIELD})
 @Retention(RUNTIME)
-@Constraint(validatedBy = UniqueValueValidatorImpl.class)
+@Constraint(validatedBy = UniqueValueOnCreateImpl.class)
 @Documented
-public @interface UniqueValueValidator {
+public @interface UniqueValueOnCreate {
 	
 	String message() default "existing value";
 	

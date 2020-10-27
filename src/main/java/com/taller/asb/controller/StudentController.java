@@ -1,7 +1,5 @@
 package com.taller.asb.controller;
 
-import java.util.Map;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Positive;
@@ -11,88 +9,146 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.taller.asb.definition.ResponseDefinition;
-import com.taller.asb.dto.student.CreateStudentDto;
+import com.taller.asb.definition.TypeDefinition;
+import com.taller.asb.dto.student.CreateStudentFormDto;
+import com.taller.asb.dto.student.StudentDto;
+import com.taller.asb.dto.student.UpdateStudentFormDto;
+import com.taller.asb.error.ErrorMessage;
 import com.taller.asb.manager.StudentManager;
 import com.taller.asb.response.ResponsePage;
 import com.taller.asb.response.ResponseService;
-import com.taller.asb.response.ResponseUtil;
 
 @RestController
 @Validated
 public class StudentController {
-	
-	private static final String NODE_STUDENT_LIST = "student_list";
-	private static final String NODE_STUDENT = "student";
-	
+		
 	@Autowired
 	private StudentManager studentManager; 
 	
 	@GetMapping("/students")
-	public Map<String,Object> getStudentList(
-		@RequestParam(value = "search", defaultValue = "") String search,
-		@RequestParam(value = "page", defaultValue = "0") 
-		@Min(value = 0, message = "Página debe ser igual o mayor a 0.") Integer page,
-		@RequestParam(value = "size", defaultValue = "0") 
-		@Min(value = 0, message = "Límite debe ser igual o mayor a 0.") Integer size
+	public ResponseService getStudentList(
+		@RequestParam(value = "q", defaultValue = "") String query,
+		@RequestParam(value = "page", defaultValue = "0") @Min(value = 0, message = ErrorMessage.MIN_PAGE_ERROR_MESSAGE) Integer page,
+		@RequestParam(value = "size", defaultValue = "0") @Min(value = 0, message = ErrorMessage.MIN_SIZE_ERROR_MESSAGE) Integer size
 	) {
-		
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
-			ResponsePage responsePage = studentManager.getStudentList(search, page, size);
-			
-			responseService.setData(responsePage.getData());
-			responseService.setPages(responsePage.getTotalPages());
-			responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
-			responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			ResponsePage responsePage = studentManager.getStudentList(query, page, size);
+			if (responsePage.getData().size() == 0) {
+				responseService.setData(responsePage.getData());
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
+				responseService.setType(TypeDefinition.STUDENTS);
+				responseService.setData(responsePage.getData());
+				responseService.setPages(responsePage.getTotalPages());
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseUtil.buildResponse(NODE_STUDENT_LIST, responseService);
+		return responseService;
 	}
 	
 	@GetMapping("/students/{idStudent}")
-	public Map<String,Object> getStudent(@PathVariable("idStudent") @Positive Long idStudent) {
-		
+	public ResponseService getStudent(
+		@PathVariable("idStudent") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idStudent
+	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
-			
-			responseService.setData(studentManager.getStudent(idStudent));
-			responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
-			responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			StudentDto studentDto = studentManager.getStudent(idStudent);
+			if (studentDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
+				responseService.setType(TypeDefinition.STUDENT);
+				responseService.setData(studentDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseUtil.buildResponse(NODE_STUDENT, responseService);
+		return responseService;
 	}
 	
 	@PostMapping("/students")
-	public Map<String,Object> saveStudent(@Valid @RequestBody CreateStudentDto createStudentDto) {
-
+	public ResponseService saveStudent(
+		@Valid @RequestBody CreateStudentFormDto createStudentFormDto
+	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
-			responseService.setData(studentManager.saveStudent(createStudentDto));
-			responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
-			responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			StudentDto studentDto = studentManager.saveStudent(createStudentFormDto);
+			
+			if (studentDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_SERVICE_UNAVAILABLE_S);
+			}
+			else {
+				responseService.setType(TypeDefinition.STUDENT);
+				responseService.setData(studentDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return ResponseUtil.buildResponse(NODE_STUDENT, responseService);
+		return responseService;
+	}
+	
+	@PutMapping("/students/{idStudent}")
+	public ResponseService updateStudent(
+		@Valid @RequestBody UpdateStudentFormDto updateStudentFormDto,
+		@PathVariable("idStudent") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idStudent
+	) {
+		ResponseService responseService = new ResponseService();
+		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
+		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_BAD_REQUEST_S);
+		
+		try {
+			if (idStudent != Long.valueOf(updateStudentFormDto.getIdStudent())) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_UNPROCESSABLE_ENTITY);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_UNPROCESSABLE_ENTITY_S);
+			}
+			
+			StudentDto studentDto = studentManager.updateStudent(updateStudentFormDto);
+			
+			if (studentDto == null) {
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+			else {
+				responseService.setType(TypeDefinition.STUDENT);
+				responseService.setData(studentDto);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_NO_CONTENT_S);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return responseService;
 	}
 }

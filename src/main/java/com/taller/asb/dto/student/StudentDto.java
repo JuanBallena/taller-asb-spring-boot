@@ -1,7 +1,5 @@
 package com.taller.asb.dto.student;
 
-import java.util.List;
-
 import com.taller.asb.dto.ParameterDto;
 
 import lombok.Builder;
@@ -21,5 +19,7 @@ public class StudentDto {
 	private String document;
 	private String address;
 	private String phone;
-	private List<Object> links;
+	private String hasDocumentCopy;
+	private String suspended;
+	private Object links;
 }

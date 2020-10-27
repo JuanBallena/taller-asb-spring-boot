@@ -2,5 +2,5 @@ package com.taller.asb.interfaces;
 
 public interface Existable {
 
-	public boolean existsInDatabase(Long id);
+	public boolean entityExistsInDatabase(Long id);
 }

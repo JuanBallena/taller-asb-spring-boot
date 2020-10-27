@@ -33,7 +33,7 @@ public class ExStudentManager {
 			
 			if (size > 0) {
 				
-				Page<ExStudent> exStudentPage = exStudentRepository.findByUserNameContainingOrUserLastNameContaining(name, lastName, PageRequest.of(page, size));
+				Page<ExStudent> exStudentPage = exStudentRepository.findByNameContainingOrLastNameContaining(name, lastName, PageRequest.of(page, size));
 				Page<ExStudentDto> exStudentDtoPage = exStudentConverter.toExStudentDtoPage(exStudentPage);		
 				
 				responsePage.setData(exStudentDtoPage.getContent());
@@ -42,7 +42,7 @@ public class ExStudentManager {
 				
 			} else {
 
-				List<ExStudent> exStudentList = exStudentRepository.findByUserNameContainingOrUserLastNameContaining(name, lastName);
+				List<ExStudent> exStudentList = exStudentRepository.findByNameContainingOrLastNameContaining(name, lastName);
 				List<ExStudentDto> exStudentDtoList = exStudentConverter.toExStudentDtoList(exStudentList);
 								
 				responsePage.setData(exStudentDtoList);

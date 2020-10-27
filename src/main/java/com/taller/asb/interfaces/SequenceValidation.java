@@ -3,7 +3,7 @@ package com.taller.asb.interfaces;
 import javax.validation.GroupSequence;
 import javax.validation.groups.Default;
 
-@GroupSequence({PriorityValidation.class, Default.class})
+@GroupSequence({FirstValidation.class, SecondValidation.class, Default.class})
 public interface SequenceValidation {
 	
 }

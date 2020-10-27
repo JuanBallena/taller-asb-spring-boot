@@ -10,8 +10,8 @@ import com.taller.asb.model.ExStudent;
 
 public interface ExStudentRepository extends JpaRepository<ExStudent, Long> {
 
-	public Page<ExStudent> findByUserNameContainingOrUserLastNameContaining(String name, String lastName, Pageable page); 
-	public List<ExStudent> findByUserNameContainingOrUserLastNameContaining(String name, String lastName);
+	public Page<ExStudent> findByNameContainingOrLastNameContaining(String name, String lastName, Pageable page); 
+	public List<ExStudent> findByNameContainingOrLastNameContaining(String name, String lastName);
 	
 	public ExStudent findByIdExStudent(Long idExStudent);
 }
