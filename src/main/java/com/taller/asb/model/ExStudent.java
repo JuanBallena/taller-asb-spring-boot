@@ -39,6 +39,11 @@ public class ExStudent {
 	public static final String FIELD_HAS_DOCUMENT_COPY = "ExStudent_HasDocumentCopy";
 	public static final String FIELD_PROMOTION = "ExStudent_Promotion";
 	
+	public static final int MAX_DOCUMENT = 20;
+	public static final int MAX_ADDRESS = 100;
+	public static final int MAX_PHONE = 30;
+	public static final int LENTGH_PROMOTION = 4;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = FIELD_ID)
@@ -70,7 +75,7 @@ public class ExStudent {
 	@Column(name = FIELD_PHONE)
 	private String phone;
 	
-	@Column(name = FIELD_HAS_DOCUMENT_COPY)
+	@Column(name = FIELD_HAS_DOCUMENT_COPY, insertable = false)
 	private Boolean hasDocumentCopy;
 	
 	@Column(name = FIELD_PROMOTION)

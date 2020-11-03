@@ -8,8 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import com.taller.asb.definition.RoleDefinition;
-import com.taller.asb.dto.ParameterDto;
-import com.taller.asb.dto.RoleDto;
+import com.taller.asb.dto.ex_student.CreateExStudentFormDto;
+import com.taller.asb.dto.parameter.ParameterDto;
+import com.taller.asb.dto.role.RoleDto;
 import com.taller.asb.dto.student.CreateStudentFormDto;
 import com.taller.asb.dto.user.CreateUserFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
@@ -61,9 +62,19 @@ public class UserConverter {
 				.build();
 	}
 	
+	public User toUserModel(CreateExStudentFormDto createExStudentFormDto) {
+		return User.builder()
+				.username(createExStudentFormDto.getUsername().toUpperCase())
+				.password(createExStudentFormDto.getPassword())
+				.role(Role.builder()
+						.idRole(RoleDefinition.ROLE_EX_STUDENT)
+						.build())
+				.build();
+	}
+	
 	public User replaceValuesInUserModel(User user, UpdateUserFormDto updateUserFormDto) {
 		user.setUsername(updateUserFormDto.getUsername().toUpperCase());
-		user.setPassword(updateUserFormDto.getPassword());
+//		user.setPassword(updateUserFormDto.getPassword());
 		user.setRole(Role.builder()
 				.idRole(Long.valueOf(updateUserFormDto.getIdRole()))
 				.build());

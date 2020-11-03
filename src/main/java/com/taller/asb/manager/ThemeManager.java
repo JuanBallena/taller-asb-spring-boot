@@ -103,7 +103,7 @@ public class ThemeManager implements Existable {
 		Theme theme = themeRepository.findByIdTheme(id);
 		
 		return theme == null 
-			? EntityDefinition.ENTITY_NOT_EXISTS 
-			: EntityDefinition.ENTITY_EXISTS;
+				? EntityDefinition.ENTITY_NOT_EXISTS 
+				: EntityDefinition.ENTITY_EXISTS;
 	}
 }

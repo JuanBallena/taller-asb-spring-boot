@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.taller.asb.annotations.EntityExistsValidator;
-import com.taller.asb.error.ErrorMessage;
+import com.taller.asb.error.ThemeErrorMessage;
 import com.taller.asb.interfaces.FirstValidation;
 import com.taller.asb.manager.ThemeManager;
 
@@ -20,28 +20,26 @@ import lombok.Setter;
 @Setter
 public class UpdateThemeFormDto {
 
-	@NotNull(message = ErrorMessage.NOT_NULL_ID_THEME_ERROR_MESSAGE)
+	@NotNull(message = ThemeErrorMessage.NOT_NULL_ID_THEME)
 	@EntityExistsValidator(
-		manager = ThemeManager.class,
-		groups = FirstValidation.class,
-		message = ErrorMessage.EXISTS_ENTITY_ID_THEME_ERROR_MESSAGE
-	)
+			manager = ThemeManager.class, 
+			groups = FirstValidation.class, 
+			message = ThemeErrorMessage.THEME_NOT_EXISTS)
 	private Integer idTheme;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_TITLE_ERROR_MESSAGE)
-	@NotEmpty(message = ErrorMessage.NOT_EMPTY_TITLE_ERROR_MESSAGE)
-	@NotBlank(message = ErrorMessage.NOT_BLANK_TITLE_ERROR_MESSAGE)
+	@NotNull(message = ThemeErrorMessage.NOT_NULL_TITLE)
+	@NotEmpty(message = ThemeErrorMessage.NOT_EMPTY_TITLE)
+	@NotBlank(message = ThemeErrorMessage.NOT_BLANK_TITLE)
 	private String title;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_AUTHOR_ERROR_MESSAGE)
-	@NotEmpty(message = ErrorMessage.NOT_EMPTY_AUTHOR_ERROR_MESSAGE)
-	@NotBlank(message = ErrorMessage.NOT_BLANK_AUTHOR_ERROR_MESSAGE)
+	@NotNull(message = ThemeErrorMessage.NOT_NULL_AUTHOR)
+	@NotEmpty(message = ThemeErrorMessage.NOT_EMPTY_AUTHOR)
+	@NotBlank(message = ThemeErrorMessage.NOT_BLANK_AUTHOR)
 	private String author;
 	
-	@NotBlank(message = ErrorMessage.NOT_BLANK_URL_LOCATION_YOUTUBE_ERROR_MESSAGE)
 	private String urlLocationYoutube;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_ID_ALLOWED_GROUP_ERROR_MESSAGE)
+	@NotNull(message = ThemeErrorMessage.NOT_NULL_ID_ALLOWED_GROUP)
 	private Integer idAllowedGroup;
 	
 	@SuppressWarnings("unchecked")

@@ -6,16 +6,16 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.taller.asb.error.ErrorMessage;
+import com.taller.asb.error.UserErrorMessage;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UpdateChangePasswordFormDto {
+public class UpdateChangePasswordUserFormDto {
 
-	@NotNull(message = ErrorMessage.NOT_NULL_CHANGE_PASSWORD_ERROR_MESSAGE)
+	@NotNull(message = UserErrorMessage.NOT_NULL_CHANGE_PASSWORD)
 	private Boolean changePassword;
 	
 	@SuppressWarnings("unchecked")

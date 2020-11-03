@@ -39,6 +39,10 @@ public class Student {
 	public static final String FIELD_PHONE = "Student_Phone";
 	public static final String FIELD_HAS_DOCUMENT_COPY = "Student_HasDocumentCopy";
 	public static final String FIELD_SUSPENDED = "Student_Suspended";
+	
+	public static final int MAX_DOCUMENT = 20;
+	public static final int MAX_ADDRESS = 100;
+	public static final int MAX_PHONE = 30;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,4 +80,5 @@ public class Student {
 	
 	@Column(name = FIELD_SUSPENDED, insertable = false)
 	private Boolean suspended;
+
 }

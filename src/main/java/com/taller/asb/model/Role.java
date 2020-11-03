@@ -23,14 +23,18 @@ import lombok.ToString;
 @Entity
 public class Role {
 	
+	public static final String FIELD_ID = "Role_Id";
+	public static final String FIELD_NAME = "Role_Name";
+	public static final String FIELD_DISPLAY_NAME = "Role_DisplayName";
+	
 	@Id
-	@Column(name="Role_Id")
+	@Column(name = FIELD_ID)
 	private Long idRole;
 	
-	@Column(name="Role_Name")
+	@Column(name = FIELD_NAME)
 	private String name;
 	
-	@Column(name="Role_DisplayName")
+	@Column(name = FIELD_DISPLAY_NAME)
 	private String displayName;
 	
 }

@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.taller.asb.dto.ParameterDto;
+import com.taller.asb.dto.parameter.ParameterDto;
 import com.taller.asb.dto.student.CreateStudentFormDto;
 import com.taller.asb.dto.student.StudentDto;
+import com.taller.asb.dto.student.UpdateStudentFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.hateoas.LinkCreator;
 import com.taller.asb.model.Parameter;
@@ -29,7 +30,7 @@ public class StudentConverter {
 		
 		List<Object> links = new LinkedList<Object>();
 		links.add(linkCreator.createLinkToUser(student.getUser().getIdUser()));
-		
+
 		return StudentDto.builder()
 				.id(student.getIdStudent())
 				.name(student.getName())
@@ -42,6 +43,12 @@ public class StudentConverter {
 				.document(student.getDocument())
 				.address(student.getAddress())
 				.phone(student.getPhone())
+				.hasDocumentCopy(student.getHasDocumentCopy())
+				.suspended(student.getSuspended())
+				.status(ParameterDto.builder()
+						.id(student.getUser().getStatus().getIdParameter())
+						.description(student.getUser().getStatus().getDescription())
+						.build())
 				.links(links)
 				.build();
 	}
@@ -58,6 +65,21 @@ public class StudentConverter {
 				.address(createStudentFormDto.getAddress())
 				.phone(createStudentFormDto.getPhone())
 				.build();
+	}
+	
+	public Student replaceValuesInStudentModel(Student student, UpdateStudentFormDto updateStudentFormDto) {
+		
+		student.setName(updateStudentFormDto.getName());
+		student.setLastName(updateStudentFormDto.getLastName());
+		student.setDocumentType(Parameter.builder()
+				.idParameter(Long.valueOf(updateStudentFormDto.getIdDocumentType()))
+				.build());
+		student.setDocument(updateStudentFormDto.getDocument());
+		student.setAddress(updateStudentFormDto.getAddress());
+		student.setHasDocumentCopy(updateStudentFormDto.getHasDocumentCopy());
+		student.setSuspended(updateStudentFormDto.getSuspended());
+		
+		return student;
 	}
 	
 	public Page<StudentDto> toStudentDtoPage(Page<Student> studentPage) {

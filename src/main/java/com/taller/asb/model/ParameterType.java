@@ -7,11 +7,13 @@ import javax.persistence.Table;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,10 +23,13 @@ import lombok.ToString;
 @Entity
 public class ParameterType {
 
+	public static final String FIELD_ID = "ParameterType_Id";
+	public static final String FIELD_DESCRIPTION = "ParameterType_Description";
+	
 	@Id
-	@Column(name="ParameterType_Id")
+	@Column(name = FIELD_ID)
 	private Long idParameterType;
 	
-	@Column(name="ParameterType_Description")
+	@Column(name = FIELD_DESCRIPTION)
 	private String description;
 }

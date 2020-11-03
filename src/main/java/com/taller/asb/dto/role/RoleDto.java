@@ -1,4 +1,4 @@
-package com.taller.asb.dto;
+package com.taller.asb.dto.role;
 
 import lombok.Builder;
 import lombok.Getter;

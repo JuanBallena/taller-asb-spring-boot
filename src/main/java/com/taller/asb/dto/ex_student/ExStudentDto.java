@@ -1,6 +1,6 @@
 package com.taller.asb.dto.ex_student;
 
-import com.taller.asb.dto.ParameterDto;
+import com.taller.asb.dto.parameter.ParameterDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +19,8 @@ public class ExStudentDto {
 	private String document;
 	private String address;
 	private String phone;
+	private Boolean hasDocumentCopy;
 	private String promotion;
-	private String hasDocumentCopy;
 	private ParameterDto status;
 	
 }

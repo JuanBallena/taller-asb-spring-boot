@@ -13,6 +13,7 @@ import com.taller.asb.definition.EntityDefinition;
 import com.taller.asb.definition.FieldDefinition;
 import com.taller.asb.dto.student.CreateStudentFormDto;
 import com.taller.asb.dto.student.StudentDto;
+import com.taller.asb.dto.student.UpdatePhotoStudentFormDto;
 import com.taller.asb.dto.student.UpdateStudentFormDto;
 import com.taller.asb.interfaces.Existable;
 import com.taller.asb.interfaces.Uniqueable;
@@ -92,14 +93,33 @@ public class StudentManager implements Uniqueable, Existable{
 		
 		User user = userRepository.save(userConverter.toUserModel(createStudentFormDto));
 		if (user == null) return null;
+		userRepository.refresh(user);
 		Student student = studentRepository.save(studentConverter.toStudentModel(createStudentFormDto, user));
 		studentRepository.refresh(student);
 		
 		return studentConverter.toStudentDto(student);
 	}
 	
-	public StudentDto updateStudent(UpdateStudentFormDto updateStudentFormDto) {
-		return null;
+	public StudentDto updateStudent(Long idStudent, UpdateStudentFormDto updateStudentFormDto) {
+		
+		Student student = studentRepository.findByIdStudent(idStudent);
+		if (student == null) return null;
+		student = studentConverter.replaceValuesInStudentModel(student, updateStudentFormDto);
+		studentRepository.save(student);
+		studentRepository.refresh(student);
+		
+		return studentConverter.toStudentDto(student);
+	}
+	
+	public StudentDto updatePhoto(Long idStudent, UpdatePhotoStudentFormDto updatePhotoStudentFormDto) {
+		
+		Student student = studentRepository.findByIdStudent(idStudent);
+		if (student == null) return null;
+		student.setUrlLocationPhoto("http://cloud...");
+		studentRepository.save(student);
+		studentRepository.refresh(student);
+		
+		return studentConverter.toStudentDto(student);
 	}
 
 	@Override
@@ -128,8 +148,8 @@ public class StudentManager implements Uniqueable, Existable{
 		if (student == null) return FieldDefinition.FIELD_VALUE_NOT_EXISTS;
 		
 		return (Long.valueOf(id) == student.getIdStudent())
-			? FieldDefinition.FIELD_VALUE_NOT_EXISTS 
-			: FieldDefinition.FIELD_VALUE_EXISTS;
+				? FieldDefinition.FIELD_VALUE_NOT_EXISTS 
+				: FieldDefinition.FIELD_VALUE_EXISTS;
 	}
 	
 	@Override
@@ -138,7 +158,7 @@ public class StudentManager implements Uniqueable, Existable{
 		Student student = studentRepository.findByIdStudent(idStudent);
 		
 		return student == null 
-			? EntityDefinition.ENTITY_NOT_EXISTS 
-			: EntityDefinition.ENTITY_EXISTS;
+				? EntityDefinition.ENTITY_NOT_EXISTS 
+				: EntityDefinition.ENTITY_EXISTS;
 	}
 }

@@ -34,6 +34,10 @@ public class User {
 	public static final String FIELD_CHANGE_PASSWORD = "User_ChangePassword";
 	public static final String FIELD_ID_001_STATUS = "User_Id001Status";
 	
+	public static final int MIN_USERNAME = 3;
+	public static final int MAX_USERNAME = 20;
+	public static final int MIN_PASSWORD = 6;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = FIELD_ID)

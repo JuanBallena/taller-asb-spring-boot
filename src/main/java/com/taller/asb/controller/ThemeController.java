@@ -19,7 +19,7 @@ import com.taller.asb.definition.TypeDefinition;
 import com.taller.asb.dto.theme.CreateThemeFormDto;
 import com.taller.asb.dto.theme.ThemeDto;
 import com.taller.asb.dto.theme.UpdateThemeFormDto;
-import com.taller.asb.error.ErrorMessage;
+import com.taller.asb.error.UrlErrorMessage;
 import com.taller.asb.interfaces.SequenceValidation;
 import com.taller.asb.manager.ThemeManager;
 import com.taller.asb.response.ResponsePage;
@@ -35,8 +35,8 @@ public class ThemeController {
 	@GetMapping("/themes")
 	public ResponseService getThemeList(
 		@RequestParam(value="q", defaultValue="") String query,
-		@RequestParam(value="size", defaultValue="0") @Min(message = ErrorMessage.MIN_SIZE_ERROR_MESSAGE, value = 0) int size,
-		@RequestParam(value="page", defaultValue="0") @Min(message = ErrorMessage.MIN_PAGE_ERROR_MESSAGE, value = 0) int page
+		@RequestParam(value="size", defaultValue="0") @Min(message = UrlErrorMessage.MIN_SIZE, value = 0) int size,
+		@RequestParam(value="page", defaultValue="0") @Min(message = UrlErrorMessage.MIN_PAGE, value = 0) int page
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
@@ -66,7 +66,7 @@ public class ThemeController {
 	
 	@GetMapping("/themes/{idTheme}")
 	public ResponseService getUser(
-		@PathVariable("idTheme") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idTheme
+		@PathVariable("idTheme") @Positive(message = UrlErrorMessage.POSITIVE_ID) Long idTheme
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
@@ -123,7 +123,7 @@ public class ThemeController {
 	@PutMapping("/themes/{idTheme}")
 	public ResponseService updateTheme(
 		@Validated(SequenceValidation.class) @RequestBody UpdateThemeFormDto updateThemeFormDto,
-		@PathVariable("idTheme") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idTheme
+		@PathVariable("idTheme") @Positive(message = UrlErrorMessage.POSITIVE_ID) Long idTheme
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);

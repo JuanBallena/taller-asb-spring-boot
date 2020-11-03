@@ -43,5 +43,5 @@ public class Theme {
 	private Parameter allowedGroup;
 	
 	@Column(name="Theme_UrlLocationYoutube")
-	private String urlThemeYoutube;
+	private String urlLocationYoutube;
 }

@@ -7,7 +7,7 @@ import java.util.function.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import com.taller.asb.dto.ParameterDto;
+import com.taller.asb.dto.parameter.ParameterDto;
 import com.taller.asb.dto.theme.CreateThemeFormDto;
 import com.taller.asb.dto.theme.ThemeDto;
 import com.taller.asb.dto.theme.UpdateThemeFormDto;
@@ -24,7 +24,7 @@ public class ThemeConverter {
 				.id(theme.getIdTheme())
 				.title(theme.getTitle())
 				.author(theme.getAuthor())
-				.urlThemeYoutube(theme.getUrlThemeYoutube())
+				.urlLocationYoutube(theme.getUrlLocationYoutube())
 				.allowedGroup(ParameterDto.builder()
 						.id(theme.getAllowedGroup().getIdParameter())
 						.description(theme.getAllowedGroup().getDescription())
@@ -37,7 +37,7 @@ public class ThemeConverter {
 		return Theme.builder()
 				.title(createThemeFormDto.getTitle())
 				.author(createThemeFormDto.getAuthor())
-				.urlThemeYoutube(createThemeFormDto.getUrlLocationYoutube())
+				.urlLocationYoutube(createThemeFormDto.getUrlLocationYoutube())
 				.allowedGroup(Parameter.builder()
 						.idParameter(Long.valueOf(createThemeFormDto.getIdAllowedGroup()))
 						.build())
@@ -48,7 +48,7 @@ public class ThemeConverter {
 		
 		theme.setTitle(updateThemeFormDto.getTitle());
 		theme.setAuthor(updateThemeFormDto.getAuthor());
-		theme.setUrlThemeYoutube(updateThemeFormDto.getUrlLocationYoutube());
+		theme.setUrlLocationYoutube(updateThemeFormDto.getUrlLocationYoutube());
 		theme.setAllowedGroup(Parameter.builder()
 				.idParameter(Long.valueOf(updateThemeFormDto.getIdAllowedGroup()))
 				.build());

@@ -25,15 +25,19 @@ import lombok.ToString;
 @Entity
 public class Parameter {
 	
+	public static final String FIELD_ID = "Parameter_Id";
+	public static final String FIELD_ID_PARAMETER_TYPE = "Parameter_IdParameterType";
+	public static final String FIELD_DESCRIPTION = "Parameter_Description";
+	
 	@Id
-	@Column(name="Parameter_Id")
+	@Column(name = FIELD_ID)
 	private Long idParameter;
 	
 	@ManyToOne
-	@JoinColumn(name="Parameter_IdParameterType")
+	@JoinColumn(name = FIELD_ID_PARAMETER_TYPE)
 	private ParameterType parameterType;
 	
-	@Column(name="Parameter_Description")
+	@Column(name = FIELD_DESCRIPTION)
 	private String description;
 
 }

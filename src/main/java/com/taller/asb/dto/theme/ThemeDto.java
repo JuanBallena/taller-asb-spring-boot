@@ -1,6 +1,6 @@
 package com.taller.asb.dto.theme;
 
-import com.taller.asb.dto.ParameterDto;
+import com.taller.asb.dto.parameter.ParameterDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +14,7 @@ public class ThemeDto {
 	private Long id;
 	private String title;
 	private String author;
-	private String urlThemeYoutube;
+	private String urlLocationYoutube;
 	private ParameterDto allowedGroup;
 	private Object links;
 }

@@ -1,7 +1,7 @@
 package com.taller.asb.dto.user;
 
-import com.taller.asb.dto.ParameterDto;
-import com.taller.asb.dto.RoleDto;
+import com.taller.asb.dto.parameter.ParameterDto;
+import com.taller.asb.dto.role.RoleDto;
 
 import lombok.Builder;
 import lombok.Getter;

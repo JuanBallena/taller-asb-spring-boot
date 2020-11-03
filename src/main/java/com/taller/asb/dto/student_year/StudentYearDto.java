@@ -1,6 +1,6 @@
 package com.taller.asb.dto.student_year;
 
-import com.taller.asb.dto.ParameterDto;
+import com.taller.asb.dto.parameter.ParameterDto;
 
 import lombok.Builder;
 import lombok.Getter;

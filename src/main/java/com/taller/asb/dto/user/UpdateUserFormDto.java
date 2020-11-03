@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.taller.asb.annotations.EntityExistsValidator;
 import com.taller.asb.annotations.UniqueValueOnUpdate;
-import com.taller.asb.error.ErrorMessage;
+import com.taller.asb.error.UserErrorMessage;
 import com.taller.asb.interfaces.FirstValidation;
 import com.taller.asb.interfaces.SecondValidation;
 import com.taller.asb.manager.UserManager;
@@ -25,36 +25,33 @@ import lombok.Setter;
 @Setter
 public class UpdateUserFormDto {
 		
-	@NotNull(groups = FirstValidation.class, message = ErrorMessage.NOT_NULL_ID_USER_ERROR_MESSAGE)
-	@EntityExistsValidator(
-		manager = UserManager.class, 
-		groups = SecondValidation.class,
-		message = ErrorMessage.EXISTS_ENTITY_ID_USER_ERROR_MESSAGE
-	)
+	@NotNull(groups = FirstValidation.class, message = UserErrorMessage.NOT_NULL_ID_USER)
+	@EntityExistsValidator(manager = UserManager.class, groups = SecondValidation.class, 
+		message = UserErrorMessage.USER_NOT_EXISTS)
 	private Integer idUser;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_USERNAME_ERROR_MESSAGE)
-	@NotEmpty(message = ErrorMessage.NOT_EMPTY_USERNAME_ERROR_MESSAGE)
-	@NotBlank(message = ErrorMessage.NOT_BLANK_USERNAME_ERROR_MESSAGE)
-	@Size(max = 20, message = ErrorMessage.SIZE_USERNAME_ERROR_MESSAGE)
+	@NotNull(message = UserErrorMessage.NOT_NULL_USERNAME)
+	@NotEmpty(message = UserErrorMessage.NOT_EMPTY_USERNAME)
+	@NotBlank(message = UserErrorMessage.NOT_BLANK_USERNAME)
+	@Size(min = User.MIN_USERNAME, max = User.MAX_USERNAME, message = UserErrorMessage.SIZE_USERNAME)
 	private String username;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_PASSWORD_ERROR_MESSAGE)
-	@NotEmpty(message = ErrorMessage.NOT_EMPTY_PASSWORD_ERROR_MESSAGE)
-	@NotBlank(message = ErrorMessage.NOT_BLANK_PASSWORD_ERROR_MESSAGE)
-	@Size(min = 6, message = ErrorMessage.SIZE_PASSWORD_ERROR_MESSAGE)
-	private String password;
+//	@NotNull(message = UserErrorMessage.NOT_NULL_PASSWORD)
+//	@NotEmpty(message = UserErrorMessage.NOT_EMPTY_PASSWORD)
+//	@NotBlank(message = UserErrorMessage.NOT_BLANK_PASSWORD)
+//	@Size(min = User.MIN_PASSWORD, message = UserErrorMessage.SIZE_PASSWORD)
+//	private String password;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_ID_ROLE_ERROR_MESSAGE)
+	@NotNull(message = UserErrorMessage.NOT_NULL_ID_ROLE)
 	private Integer idRole;
 	
-	@NotNull(message = ErrorMessage.NOT_NULL_ID_STATUS_ERROR_MESSAGE)
+	@NotNull(message = UserErrorMessage.NOT_NULL_ID_STATUS)
 	private Integer idStatus;
 	
 	@UniqueValueOnUpdate(
 		field = User.FIELD_USERNAME, 
 		manager = UserManager.class,
-		message = ErrorMessage.UNIQUE_VALUE_USERNAME_ERROR_MESSAGE)
+		message = UserErrorMessage.EXISTING_USERNAME)
 	private EntityUtil getIdAndUsername() {
 		return EntityUtil.builder().id(idUser).value(username).build();
 	}
@@ -68,7 +65,7 @@ public class UpdateUserFormDto {
 		
 		idUser           = (Integer) data.get("idUser");
 		username         = (String)  data.get("username");
-		password         = (String)  data.get("password");
+//		password         = (String)  data.get("password");
 		idRole         	 = (Integer) data.get("idRole");
 		idStatus         = (Integer) data.get("idStatus");
 	}

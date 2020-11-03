@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.taller.asb.definition.ResponseDefinition;
 import com.taller.asb.definition.TypeDefinition;
 import com.taller.asb.dto.user.CreateUserFormDto;
-import com.taller.asb.dto.user.UpdateChangePasswordFormDto;
+import com.taller.asb.dto.user.UpdateChangePasswordUserFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
-import com.taller.asb.error.ErrorMessage;
+import com.taller.asb.error.UrlErrorMessage;
 import com.taller.asb.interfaces.SequenceValidation;
 import com.taller.asb.manager.UserManager;
 import com.taller.asb.response.ResponsePage;
@@ -36,8 +36,8 @@ public class UserController {
 	@GetMapping("/users")
 	public ResponseService getUserList(
 		@RequestParam(value="q", defaultValue = "") String query,
-		@RequestParam(value="page", defaultValue = "0") @Min(message = ErrorMessage.MIN_PAGE_ERROR_MESSAGE , value = 0) Integer page,
-		@RequestParam(value="size", defaultValue = "0") @Min(message = ErrorMessage.MIN_SIZE_ERROR_MESSAGE, value = 0) Integer size
+		@RequestParam(value="page", defaultValue = "0") @Min(message = UrlErrorMessage.MIN_PAGE , value = 0) Integer page,
+		@RequestParam(value="size", defaultValue = "0") @Min(message = UrlErrorMessage.MIN_SIZE, value = 0) Integer size
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
@@ -67,7 +67,7 @@ public class UserController {
 	
 	@GetMapping("/users/{idUser}")
 	public ResponseService getUser(
-		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@PathVariable("idUser") @Positive(message = UrlErrorMessage.POSITIVE_ID) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
@@ -124,7 +124,7 @@ public class UserController {
 	@PutMapping("/users/{idUser}")
 	public ResponseService updateUser(
 		@Validated(SequenceValidation.class) @RequestBody UpdateUserFormDto updateUserFormDto,
-		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@PathVariable("idUser") @Positive(message = UrlErrorMessage.POSITIVE_ID) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
@@ -158,15 +158,15 @@ public class UserController {
 	
 	@PutMapping("/users/actions/change_password/{idUser}")
 	public ResponseService updateChangePassword(
-		@Valid @RequestBody UpdateChangePasswordFormDto updateChangePasswordFormDto,
-		@PathVariable("idUser") @Positive(message = ErrorMessage.POSITIVE_ID_ERROR_MESSAGE) Long idUser
+		@Valid @RequestBody UpdateChangePasswordUserFormDto updateChangePasswordUserFormDto,
+		@PathVariable("idUser") @Positive(message = UrlErrorMessage.POSITIVE_ID) Long idUser
 	) {
 		ResponseService responseService = new ResponseService();
 		responseService.setResponseCode(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR);
 		responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_INTERNAL_SERVER_ERROR_S);
 
 		try {
-			UserDto userDto = userManager.updateChangePassword(idUser, updateChangePasswordFormDto);
+			UserDto userDto = userManager.updateChangePassword(idUser, updateChangePasswordUserFormDto);
 			
 			if (userDto == null) {
 				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_NO_CONTENT);
@@ -175,8 +175,8 @@ public class UserController {
 			else {
 				responseService.setType(TypeDefinition.USER);
 				responseService.setData(userDto);
-				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_OK);
-				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_OK_S);
+				responseService.setResponseCode(ResponseDefinition.RESPONSECODE_CREATED);
+				responseService.setResponseMessage(ResponseDefinition.RESPONSECODE_CREATED_S);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

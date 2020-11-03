@@ -11,7 +11,7 @@ import com.taller.asb.converter.UserConverter;
 import com.taller.asb.definition.EntityDefinition;
 import com.taller.asb.definition.FieldDefinition;
 import com.taller.asb.dto.user.CreateUserFormDto;
-import com.taller.asb.dto.user.UpdateChangePasswordFormDto;
+import com.taller.asb.dto.user.UpdateChangePasswordUserFormDto;
 import com.taller.asb.dto.user.UpdateUserFormDto;
 import com.taller.asb.dto.user.UserDto;
 import com.taller.asb.interfaces.Existable;
@@ -104,11 +104,11 @@ public class UserManager implements Uniqueable, Existable {
 		return userConverter.toUserDto(user);
 	}
 	
-	public UserDto updateChangePassword(Long idUser, UpdateChangePasswordFormDto updateChangePasswordFormDto) {
+	public UserDto updateChangePassword(Long idUser, UpdateChangePasswordUserFormDto updateChangePasswordUserFormDto) {
 		
 		User user = userRepository.findByIdUser(idUser);
 		if (user == null) return null;
-		user.setChangePassword(updateChangePasswordFormDto.getChangePassword());
+		user.setChangePassword(updateChangePasswordUserFormDto.getChangePassword());
 		userRepository.save(user);
 		userRepository.refresh(user);
 		
